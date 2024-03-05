@@ -72,16 +72,12 @@ async function editItem() {}
                                     <div class="col-xs-6">
                                         <h2>Manage <b>Employees</b></h2>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <a
-                                            href="#addEmployeeModal"
-                                            class="btn btn-success"
-                                            data-toggle="modal"
-                                            ><i class="material-icons"
-                                                >&#xE147;</i
-                                            >
-                                            <span>Add New Item</span></a
-                                        >
+                                    <div
+                                        class="col-xs-6 container d-flex justify-content-end text-black pe-5"
+                                    >
+                                        <button @click="showCreateModal">
+                                            Add New
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +107,28 @@ async function editItem() {}
                         </div>
                     </div>
                 </div>
-                <Modal v-show="isModalVisible" @close="closeModal" />
+                <Modal v-show="isModalVisible" @close="closeModal">
+                    <template v-slot:header>
+                        <h2>Edit Item</h2>
+                    </template>
+                    <template v-slot:body>
+                        <div>asdasd</div>
+                    </template>
+                    <template v-slot:footer>
+                        <button @click="closeModal">Edit</button>
+                    </template>
+                </Modal>
+                <Modal v-show="isCreateModalVisible" @close="closeCreateModal">
+                    <template v-slot:header>
+                        <h2>Create Item</h2>
+                    </template>
+                    <template v-slot:body>
+                        <div>asdasd</div>
+                    </template>
+                    <template v-slot:footer>
+                        <button @click="closeModal">Create</button>
+                    </template>
+                </Modal>
             </body>
         </html>
     </main>
@@ -127,6 +144,7 @@ export default {
     data() {
         return {
             isModalVisible: false,
+            isCreateModalVisible: false,
         };
     },
     methods: {
@@ -135,6 +153,12 @@ export default {
         },
         closeModal() {
             this.isModalVisible = false;
+        },
+        showCreateModal() {
+            this.isCreateModalVisible = true;
+        },
+        closeCreateModal() {
+            this.isCreateModalVisible = false;
         },
     },
 };
