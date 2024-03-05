@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Category;
+use App\Models\Item;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Item>
@@ -14,10 +16,14 @@ class ItemFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
+    protected $model = Item::class;
+
+    public function definition()
     {
         return [
-            //
+            'name' => $this->faker->word,
+            'stock' => $this->faker->randomNumber(2),
+            'id_category' => \App\Models\Category::factory(), // Menggunakan factory untuk membuat kategori
         ];
     }
 }
