@@ -6,19 +6,20 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: () => import('../views/Home.vue')
-        },
-        {
-            path: '/create',
-            name: 'create',
-            component: () => import('../views/Create.vue')
-        },
-        {
-            path: '/edit/:id',
-            name: 'edit',
-            component: () => import('../views/Edit.vue'),
+            component: () => import('../views/Home.vue'),
             props: true
         },
+        // {
+        //     path: '/create',
+        //     name: 'create',
+        //     component: () => import('../views/Create.vue')
+        // },
+        // {
+        //     path: '/edit/:id',
+        //     name: 'edit',
+        //     component: () => import('../views/Edit.vue'),
+        //     props: true
+        // },
 
     ]
 })

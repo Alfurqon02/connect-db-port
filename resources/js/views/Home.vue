@@ -1,13 +1,53 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
+
+const open = ref(false)
 let items = ref([])
+// let props = defineProps(['id'])
+// let name = ref([])
+// let stock = ref([])
+// let category = ref([])
+// const router = useRouter()
+
 
 onMounted(async () => {
     const response = await axios.get('/api/getData')
     items.value = response.data.items
     console.log(items.value)
 })
+
+async function editItem() {
+
+}
+
+// const editNews = async () => {
+//     // Add validation / CSRF token
+
+//     const formData = new FormData()
+//     formData.append('name', name.value)
+//     formData.append('stock', stock.value)
+//     formData.append('category', categories.name.value)
+
+//     if (files.value) {
+//         for (let i = 0; i < files.value.length; i++) {
+//             formData.append(files[${i}], files.value[i])
+//         }
+//     }
+
+//     try {
+//         const response = await axios.post(/api/getData/${props.id}, formData, {
+//             headers: {
+//                 'Content-Type': 'multipart/form-data'
+//             }
+//         })
+//         console.log(response.data)
+//         alert('Item edited')
+//     } catch (error) {
+//         console.error(error.response.data)
+//         alert('Error edit item')
+//     }
+// }
 </script>
 
 <template>
@@ -53,9 +93,7 @@ onMounted(async () => {
                                     <td>{{ item.stock }}</td>
                                     <td>{{ item.categories.name }}</td>
                                     <td>
-                                        <RouterLink :to="{ name: 'edit', params: { id: item.id } }">
-                                            <button>Edit</button>
-                                        </RouterLink>
+                                        <button @click="open = true">Edit</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -64,7 +102,7 @@ onMounted(async () => {
                 </div>
             </div>
             <!-- Edit Modal HTML -->
-            <div id="addEmployeeModal" class="modal fade">
+            <!-- <div id="addEmployeeModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <form>
@@ -98,9 +136,9 @@ onMounted(async () => {
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- Delete Modal HTML -->
-            <div id="deleteEmployeeModal" class="modal fade">
+            <!-- <div id="deleteEmployeeModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <form>
@@ -120,7 +158,14 @@ onMounted(async () => {
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> -->
+            <!-- Modal Test -->
+            <!-- <Teleport to="body">
+                <div v-if="open" class="modal">
+                    <p>Hello from the modal!</p>
+                    <button @click="open = false">Close</button>
+                </div>
+            </Teleport> -->
         </body>
 
         </html>
