@@ -20,4 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/getData', [HomeController::class, 'index']);
-
+Route::get('/getCategories', [HomeController::class, 'getCategories']);
+Route::delete('/deleteItem/{id}', [HomeController::class, 'deleteItem']);
+Route::post('/createItem', [HomeController::class, 'createItem']);
+Route::put('/editItem/{id}', [HomeController::class, 'editItem']);

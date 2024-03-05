@@ -3,12 +3,74 @@ import { onMounted, ref } from "vue";
 import axios from "axios";
 
 let items = ref([]);
+let categories = ref([]);
 
 onMounted(async () => {
     const response = await axios.get("/api/getData");
     items.value = response.data.items;
     console.log(items.value);
+
+    const responseCategories = await axios.get("/api/getCategories");
+    categories.value = responseCategories.data.categories;
+    console.log(categories.value);
 });
+
+const editItem = async (nameEdit, stockEdit, id_categoryEdit) => {
+    let formData = new FormData();
+    formData.append("name", nameEdit);
+    formData.append("stock", stockEdit);
+    formData.append("id_category", id_categoryEdit);
+    alert("Edit item");
+    try {
+        alert("Edit item");
+        const response = await axios.post(
+            `/api/editItem/${props.id}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            },
+        );
+        console.log(response.data);
+        alert("Item edited");
+    } catch (error) {
+        alert("Edit item");
+        console.error(error.response.data);
+        alert("Error editing item");
+    }
+};
+
+const deleteItem = async (id) => {
+    try {
+        const response = await axios.delete(`/api/deleteItem/${id}`);
+        console.log(response.data);
+        alert("Item deleted");
+    } catch (error) {
+        console.error(error.response.data);
+        alert("Error deleting item");
+    }
+};
+
+const createItem = async (nameCreate, stockCreate, id_categoryCreate) => {
+    let formData = new FormData();
+    formData.append("name", nameCreate.value);
+    formData.append("stock", stockCreate.value);
+    formData.append("id_category", id_categoryCreate.value);
+
+    try {
+        const response = await axios.post("/api/createItem", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        console.log(response.data);
+        alert("Item created");
+    } catch (error) {
+        console.error(error.response.data);
+        alert("Error creating item");
+    }
+};
 </script>
 
 <template>
@@ -48,7 +110,6 @@ onMounted(async () => {
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <!-- <th>#</th> -->
                                         <th>Name</th>
                                         <th>Stock</th>
                                         <th>Category</th>
@@ -61,8 +122,22 @@ onMounted(async () => {
                                         <td>{{ item.stock }}</td>
                                         <td>{{ item.categories.name }}</td>
                                         <td>
-                                            <button @click="showModal(10)">
+                                            <button
+                                                @click="
+                                                    showModal(
+                                                        item.id,
+                                                        item.name,
+                                                        item.stock,
+                                                        item.categories.id,
+                                                    )
+                                                "
+                                            >
                                                 Edit
+                                            </button>
+                                            <button
+                                                @click="deleteItem(item.id)"
+                                            >
+                                                Delete
                                             </button>
                                         </td>
                                     </tr>
@@ -76,10 +151,35 @@ onMounted(async () => {
                         <h2>Edit Item {{ itemId }}</h2>
                     </template>
                     <template v-slot:body>
-                        <div>Edit</div>
+                        <div>
+                            <p>Name:</p>
+                            <input type="text" v-model="nameEdit" />
+                            <br /><br />
+                            <br /><br />
+                            <p>Stock:</p>
+                            <input type="text" v-model="stockEdit" />
+                            <br /><br />
+                            <br /><br />
+                            <p>Category:</p>
+                            <select v-if="categories" v-model="id_categoryEdit">
+                                <option
+                                    v-for="category in categories"
+                                    :key="category.id"
+                                    :value="category.id"
+                                >
+                                    {{ category.name }}
+                                </option>
+                            </select>
+                        </div>
                     </template>
                     <template v-slot:footer>
-                        <button @click="closeModal">Edit</button>
+                        <button
+                            @click="
+                                editItem(nameEdit, stockEdit, id_categoryEdit)
+                            "
+                        >
+                            Edit
+                        </button>
                     </template>
                 </Modal>
                 <Modal v-show="isCreateModalVisible" @close="closeCreateModal">
@@ -87,10 +187,42 @@ onMounted(async () => {
                         <h2>Create Item</h2>
                     </template>
                     <template v-slot:body>
-                        <div>Create</div>
+                        <div>
+                            <p>Name:</p>
+                            <input type="text" v-model="nameCreate" />
+                            <br /><br />
+                            <br /><br />
+                            <p>Stock:</p>
+                            <input type="text" v-model="stockCreate" />
+                            <br /><br />
+                            <br /><br />
+                            <p>Category:</p>
+                            <select
+                                v-if="categories"
+                                v-model="id_categoryCreate"
+                            >
+                                <option
+                                    v-for="category in categories"
+                                    :key="category.id"
+                                    :value="category.id"
+                                >
+                                    {{ category.name }}
+                                </option>
+                            </select>
+                        </div>
                     </template>
                     <template v-slot:footer>
-                        <button @click="closeModal">Create</button>
+                        <button
+                            @click="
+                                createItem(
+                                    nameCreate,
+                                    stockCreate,
+                                    id_categoryCreate,
+                                )
+                            "
+                        >
+                            Create
+                        </button>
                     </template>
                 </Modal>
             </body>
@@ -113,15 +245,21 @@ export default {
         };
     },
     methods: {
-        showModal(id) {
+        showModal(id, name, stock, category) {
             this.isModalVisible = true;
             this.itemId = id;
+            this.nameEdit = name;
+            this.stockEdit = stock;
+            this.id_categoryEdit = category;
         },
         closeModal() {
             this.isModalVisible = false;
         },
         showCreateModal() {
             this.isCreateModalVisible = true;
+            this.nameCreate = "";
+            this.stockCreate = "";
+            this.id_categoryCreate = "";
         },
         closeCreateModal() {
             this.isCreateModalVisible = false;

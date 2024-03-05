@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
@@ -17,54 +18,46 @@ class HomeController extends Controller
         return response()->json([
             'items' => $item
         ], 200);
-
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getCategories()
     {
-        //
+        $categories = Category::all();
+        return response()->json([
+            'categories' => $categories
+        ], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function deleteItem($id)
     {
-        //
+        $item = Item::find($id);
+        $item->delete();
+        return response()->json([
+            'message' => 'Item deleted successfully'
+        ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function createItem(Request $request)
     {
-        //
+        $item = new Item();
+        $item->name = $request->name;
+        $item->price = $request->price;
+        $item->save();
+        $item->categories()->attach($request->category);
+        return response()->json([
+            'message' => 'Item created successfully'
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function editItem(Request $request, $id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $item = Item::find($id);
+        $item->name = $request->name;
+        $item->price = $request->price;
+        $item->save();
+        $item->categories()->sync($request->category);
+        return response()->json([
+            'message' => 'Item updated successfully'
+        ], 200);
     }
 }
