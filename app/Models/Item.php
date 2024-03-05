@@ -10,7 +10,7 @@ class Item extends Model
     use HasFactory;
     protected $fillable = ['name', 'stock', 'id_category'];
 
-    public function category()
+    public function categories()
     {
         return $this->belongsTo(Category::class, 'id_category');
     }

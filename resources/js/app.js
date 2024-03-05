@@ -1,4 +1,5 @@
-import './bootstrap'
+import './bootstrap';
+import '../css/app.css';
 
 import { createApp } from 'vue'
 
@@ -9,6 +10,6 @@ const app = createApp(App)
 
 app.use(router)
 
-alert('app.js is working!')
+// alert('app.js is working!')
 
 app.mount('#app')
