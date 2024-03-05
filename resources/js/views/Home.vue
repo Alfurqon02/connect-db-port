@@ -2,49 +2,13 @@
 import { onMounted, ref } from "vue";
 import axios from "axios";
 
-const open = ref(false);
 let items = ref([]);
-// let props = defineProps(['id'])
-// let name = ref([])
-// let stock = ref([])
-// let category = ref([])
-// const router = useRouter()
 
 onMounted(async () => {
     const response = await axios.get("/api/getData");
     items.value = response.data.items;
     console.log(items.value);
 });
-
-async function editItem() {}
-
-// const editNews = async () => {
-//     // Add validation / CSRF token
-
-//     const formData = new FormData()
-//     formData.append('name', name.value)
-//     formData.append('stock', stock.value)
-//     formData.append('category', categories.name.value)
-
-//     if (files.value) {
-//         for (let i = 0; i < files.value.length; i++) {
-//             formData.append(files[${i}], files.value[i])
-//         }
-//     }
-
-//     try {
-//         const response = await axios.post(/api/getData/${props.id}, formData, {
-//             headers: {
-//                 'Content-Type': 'multipart/form-data'
-//             }
-//         })
-//         console.log(response.data)
-//         alert('Item edited')
-//     } catch (error) {
-//         console.error(error.response.data)
-//         alert('Error edit item')
-//     }
-// }
 </script>
 
 <template>
@@ -97,7 +61,7 @@ async function editItem() {}
                                         <td>{{ item.stock }}</td>
                                         <td>{{ item.categories.name }}</td>
                                         <td>
-                                            <button @click="showModal">
+                                            <button @click="showModal(10)">
                                                 Edit
                                             </button>
                                         </td>
@@ -109,10 +73,10 @@ async function editItem() {}
                 </div>
                 <Modal v-show="isModalVisible" @close="closeModal">
                     <template v-slot:header>
-                        <h2>Edit Item</h2>
+                        <h2>Edit Item {{ itemId }}</h2>
                     </template>
                     <template v-slot:body>
-                        <div>asdasd</div>
+                        <div>Edit</div>
                     </template>
                     <template v-slot:footer>
                         <button @click="closeModal">Edit</button>
@@ -123,7 +87,7 @@ async function editItem() {}
                         <h2>Create Item</h2>
                     </template>
                     <template v-slot:body>
-                        <div>asdasd</div>
+                        <div>Create</div>
                     </template>
                     <template v-slot:footer>
                         <button @click="closeModal">Create</button>
@@ -145,11 +109,13 @@ export default {
         return {
             isModalVisible: false,
             isCreateModalVisible: false,
+            itemId: 0,
         };
     },
     methods: {
-        showModal() {
+        showModal(id) {
             this.isModalVisible = true;
+            this.itemId = id;
         },
         closeModal() {
             this.isModalVisible = false;
